@@ -1,4 +1,4 @@
-package com.es.jwtSecurityKotlin.security
+package com.es.proyectgoDinAda_GPS_Tracking.security
 
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.JWKSet
@@ -42,17 +42,12 @@ class SecurityConfig {
             .csrf { csrf -> csrf.disable() } // Cross-Site Forgery
             .authorizeHttpRequests { auth ->
                 auth
+                    .requestMatchers(HttpMethod.POST,"/usuarios/register").permitAll()
                     .requestMatchers("/usuarios/login").permitAll() // Permitir hacer el login a todos
-                    // especificar el HttpMethod.xxxx para no tener problemas
-                    .requestMatchers("/secretos/ficha1").hasAuthority("ADMIN") // El hasrole por defecto tiene que estar autenticated
-                    //.requestMatchers(HttpMethod.GET, "/secreto/{id}").authenticated()  Tambien se puede poner con un parametro
-                    //.requestMatchers(HttpMethod.DELETE, "/secreto/{id}").authenticated()
-                    .requestMatchers("/secretos/ficha2").permitAll()
-                    .requestMatchers("/rutas_protegidas/recurso1").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/rutas_protegidas/eliminar/{nombre}").authenticated()
-                    .requestMatchers("/rutas_publicas/**").permitAll()
-                    .anyRequest().authenticated()
-                    //.anyRequest().permitAll()
+
+                    //.requestMatchers("/secretos/ficha1").hasAuthority("ADMIN") // El hasrole por defecto tiene que estar autenticated
+                    //.requestMatchers(HttpMethod.DELETE, "/rutas_protegidas/eliminar/{nombre}").authenticated()
+
             } // Recursos protegidos y publicos
             .oauth2ResourceServer { oauth2 ->
                 oauth2.jwt ( Customizer.withDefaults() ) // Establece que el contrl de autenticacion se hagapor jwt, en vez de una atenticacion basica

@@ -7,7 +7,12 @@ Este proyecto consiste en la creación de una **API REST** segura, desarrollada 
 La idea principal es una App que permite almacenar y registrar el seguimiento en tiempo real de un vehículo usando el GPS de un dispositivo móvil.
 
 3. Justificación del proyecto
+Este proyecto nace para cubirar la necesidad de poder tener una App que resgistre tus salidas, rutas, viajes en vehiculos para poder consultarlas y compartirlas en cualquier momento. Nace con la idea principal de no tener la preocupación de no saber como encontrar o localizar de nuevo algún lugar o carretera por el cual has conducido.
+Pensada principalmente para el público motero, que sale a hacer rutas a la aventura sin un destino concreto y quieren tener un registro de esta.
+
 4. Descripciónn de las tablas 
+
+
 
 # Endpoints
 ### Tabla usuarios
@@ -52,3 +57,7 @@ La idea principal es una App que permite almacenar y registrar el seguimiento en
 ### Tabla puntos_gps
 - POST /rutas/{id}/puntos -> Permite añadir un listado de puntos GPS a una ruta existente.
 - GET /rutas/{id}/puntos -> Obtiene todos los puntos asociados a una ruta específica por su ID.
+
+
+# Diagrama E-R 
+![Diagrama E-R](src/main/resources/Diagrama_GPSTracking.png)

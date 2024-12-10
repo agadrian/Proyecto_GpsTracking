@@ -1,4 +1,4 @@
-package com.es.jwtSecurityKotlin.security
+package com.es.proyectgoDinAda_GPS_Tracking.security
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication

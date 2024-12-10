@@ -1,6 +1,6 @@
 package com.es.proyectgoDinAda_GPS_Tracking
 
-import com.es.jwtSecurityKotlin.security.RSAKeysProperties
+import com.es.proyectgoDinAda_GPS_Tracking.security.RSAKeysProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication

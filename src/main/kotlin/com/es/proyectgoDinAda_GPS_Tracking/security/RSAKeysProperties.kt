@@ -1,4 +1,4 @@
-package com.es.jwtSecurityKotlin.security
+package com.es.proyectgoDinAda_GPS_Tracking.security
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.security.interfaces.RSAPrivateKey
