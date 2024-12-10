@@ -16,13 +16,14 @@ Pensada principalmente para el público motero, que sale a hacer rutas a la aven
 
 # Endpoints
 ### Tabla usuarios
-| Método | Endpoint       | Descripción                |
-|--------|----------------|----------------------------|
-| POST   | /usuarios      | Registrar nuevo usuario    |
-| GET    | /usuarios      | Obtener todos los usuarios |
-| GET    | /usuario/{id}  | Obtener usuario por ID     |
-| PUT    | /usuarios/{id} | Actualizar usuario por ID  |
-| DELETE | /usuarios/{id} | Eliminar usuario por ID    |
+| Método | Endpoint           | Descripción                |
+|--------|--------------------|----------------------------|
+| POST   | /usuarios/register | Registrar nuevo usuario    |
+| POST   | /usuarios/login    | Hacer login con el usuario |
+| GET    | /usuarios          | Obtener todos los usuarios |
+| GET    | /usuario/{id}      | Obtener usuario por ID     |
+| PUT    | /usuarios/{id}     | Actualizar usuario por ID  |
+| DELETE | /usuarios/{id}     | Eliminar usuario por ID    |
 
 ### Tabla rutas
 | Método | Endpoint    | Descripción             |

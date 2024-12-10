@@ -27,6 +27,18 @@ class AlreadyExistsException(message: String) : RuntimeException("$DESCRIPTION $
     }
 }
 
+class UnauthorizedException(message: String) : RuntimeException("$DESCRIPTION $message"){
+    companion object {
+        const val DESCRIPTION = "Unauthorized Exception (401)."
+    }
+}
+
+class ForbiddenException(message: String) : RuntimeException("$DESCRIPTION $message"){
+    companion object {
+        const val DESCRIPTION = "Forbidden Exception (403)."
+    }
+}
+
 /*
 
 class UnauthorizedException(message: String) : RuntimeException("$DESCRIPTION  $message"){

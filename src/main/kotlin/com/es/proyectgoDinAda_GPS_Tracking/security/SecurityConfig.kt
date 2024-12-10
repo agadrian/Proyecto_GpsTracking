@@ -29,8 +29,6 @@ import org.springframework.security.web.SecurityFilterChain
 @EnableWebSecurity
 class SecurityConfig {
 
-
-
     @Autowired
     private lateinit var rsaKeys: RSAKeysProperties
 
@@ -43,7 +41,9 @@ class SecurityConfig {
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers(HttpMethod.POST,"/usuarios/register").permitAll()
-                    .requestMatchers("/usuarios/login").permitAll() // Permitir hacer el login a todos
+                    .requestMatchers(HttpMethod.POST,"/usuarios/login").permitAll() // Permitir hacer el login a todos
+                    .requestMatchers(HttpMethod.GET,"/usuarios/").hasRole("ADMIN") // Get all users
+                    //.requestMatchers(HttpMethod.GET,"/usuarios/").authenticated()
 
                     //.requestMatchers("/secretos/ficha1").hasAuthority("ADMIN") // El hasrole por defecto tiene que estar autenticated
                     //.requestMatchers(HttpMethod.DELETE, "/rutas_protegidas/eliminar/{nombre}").authenticated()
@@ -56,6 +56,9 @@ class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .httpBasic(Customizer.withDefaults())
+            .exceptionHandling { exceptions ->
+                .authenticationM
+            }
             .build()
     }
 

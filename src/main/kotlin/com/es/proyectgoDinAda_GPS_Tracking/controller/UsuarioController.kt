@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.naming.AuthenticationException
 
 @RestController
@@ -75,4 +72,17 @@ class UsuarioController {
 
     }
 
+
+    // Saludar user
+    @GetMapping("/usuario_autenticado")
+    fun saludarUserAutenticado(authentication: Authentication): String {
+        return "Hola ${authentication.name}"
+    }
+
+
+    @GetMapping("/")
+    fun getAllUsers(): ResponseEntity<List<Usuario>> {
+        val users = usuarioService.getAllUsers()
+        return ResponseEntity(users, HttpStatus.OK)
+    }
 }

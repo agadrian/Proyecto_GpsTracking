@@ -58,4 +58,9 @@ class UsuarioService: UserDetailsService {
             .roles(usuario.roles)
             .build()
     }
+
+
+    fun getAllUsers(): List<Usuario> {
+        return usuarioRepository.findAll()
+    }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 // En lugar de usar @ResponseStatus, devolvemos expplicitamente un ResponseEntity con el codigoa decuado, por ej, HttpStatus.BAD_REQUEST o HttpStatus.NOT_FOUND, y el objeto ErrorMessage que contiene el mensaje de error y la ruta de la solicitud (request.requestURI)
 
 // Hacerlo de esta forma permite que se contorle los errores en APIExceptionHandler, por tanto el flujo de la app no se corta, como ocurre al usar ResponseStatus y no 'pete' la aplicacion.
-
+// Todo: Pasarle la excepcion concreta o de tipo Exception directamente??¿?¿?
 @ControllerAdvice
 class APIExceptionHandler {
 
@@ -44,13 +44,36 @@ class APIExceptionHandler {
 
 
     @ExceptionHandler(ConflictException::class, AlreadyExistsException::class)
-    fun alreadyExists(request: HttpServletRequest, exception: Exception): ResponseEntity<ErrorMessage> {
+    fun alreadyExists(request: HttpServletRequest, exception: AlreadyExistsException): ResponseEntity<ErrorMessage> {
         val errorMessage = ErrorMessage(
             status = HttpStatus.CONFLICT.value(),
             message = exception.message ?: "Error ocurred",
             path = request.requestURI
         )
         return ResponseEntity(errorMessage, HttpStatus.CONFLICT)
+    }
+
+
+    // Manejo de UnauthorizedException (401)
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleUnauthorized(request: HttpServletRequest, exception: UnauthorizedException): ResponseEntity<ErrorMessage> {
+        val errorMessage = ErrorMessage(
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            message = exception.message ?: "Unauthorized access",
+            path = request.requestURI
+        )
+        return ResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED)
+    }
+
+    // Manejo de ForbiddenException (403)
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleForbidden(request: HttpServletRequest, exception: ForbiddenException): ResponseEntity<ErrorMessage> {
+        val errorMessage = ErrorMessage(
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            message = exception.message ?: "Access is forbidden",
+            path = request.requestURI
+        )
+        return ResponseEntity(errorMessage, HttpStatus.FORBIDDEN)
     }
 
 
@@ -64,6 +87,9 @@ class APIExceptionHandler {
         )
         return ResponseEntity(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR)
     }
+
+
+
 
 
     /*
