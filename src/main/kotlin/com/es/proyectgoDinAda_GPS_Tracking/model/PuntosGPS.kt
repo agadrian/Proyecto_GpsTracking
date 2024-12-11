@@ -15,13 +15,13 @@ data class PuntosGPS(
     @JoinColumn(name = "ruta_id", nullable = false)
     var ruta: Ruta? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     var latitud: Double? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     var longitud: Double? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 15)
     var fechaHora: LocalDateTime? = null // Necesario ¿?
 
 )

@@ -18,14 +18,15 @@ data class Ruta(
     @OneToMany(mappedBy = "ruta", cascade = [(CascadeType.ALL)], orphanRemoval = true)
     var puntos: List<PuntosGPS>? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     var nombre: String? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     var fechaInicio: LocalDateTime? = null,
 
     @Column(nullable = false)
     var fechaFin: LocalDateTime? = null,
 
+    @Column(nullable = false, length = 10)
     var distancia: Double? = null, // ¿?
 )

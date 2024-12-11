@@ -1,5 +1,6 @@
 
-## Nombre del proyecto: Drive Tracker / Route Recorder
+## Nombre del proyecto: 
+#### Drive Tracker / Route Recorder
 
 ## Idea del proyecto
 
@@ -7,10 +8,24 @@ Este proyecto consiste en la creación de una **API REST** segura, desarrollada 
 La idea principal es una App que permite almacenar y registrar el seguimiento GPS de un vehículo usando la ubiacion en timepo real de un dispositivo móvil.
 
 ## Justificación del proyecto
-Esta App nace para cubirar la necesidad de poder resgistrar tus salidas, rutas o viajes en vehículo, permitiendo consultarlas y compartirlas en cualquier momento. La idea principal es no tener la preocupación de no saber como encontrar o localizar de nuevo algún lugar o carretera por la cual has conducido, además de obtener un análisis de cada una de ellas, un análisis general, etc.
+Esta App nace para cubrir la necesidad de poder resgistrar tus salidas, rutas o viajes en vehículo, permitiendo consultarlas y compartirlas en cualquier momento. La idea principal es no tener la preocupación de encontrar o localizar de nuevo algún lugar o carretera por la cual has conducido, además de obtener un análisis de cada una de las rutas, un análisis general semanal, mensual etc.
 Pensada principalmente para el público motero, que sale a hacer rutas a la aventura sin un destino concreto y quieren tener un registro de esta.
 
-# Descripciónn de las tablas
+
+
+## Descripción de las tablas
+
+### Tabla usuarios
+![Tabla usuario](src/main/resources/Tabla_User.png)
+
+### Tabla rutas
+![Tabla rutas](src/main/resources/Tabla_Rutas.png)
+
+### Tabla puntos_GPS
+![Tabla puntos_gps](src/main/resources/Tabla_PuntosGPS.png)
+
+# Diagrama E-R
+![Diagrama E-R](src/main/resources/Diagrama_GPSTracking.png)
 
 ## Endpoints
 ### Tabla usuarios
@@ -58,5 +73,3 @@ Pensada principalmente para el público motero, que sale a hacer rutas a la aven
 - GET /rutas/{id}/puntos -> Obtiene todos los puntos asociados a una ruta específica por su ID.
 
 
-# Diagrama E-R 
-![Diagrama E-R](src/main/resources/Diagrama_GPSTracking.png)

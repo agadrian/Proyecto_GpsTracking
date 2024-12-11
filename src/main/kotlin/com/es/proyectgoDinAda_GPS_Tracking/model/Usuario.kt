@@ -9,13 +9,13 @@ data class Usuario(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 40)
     var email: String? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 40)
     var password: String? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 40)
     var username: String? = null,
 
     var roles: String? = null, // e.j., "ROLE_USER,ROLE_ADMIN"
