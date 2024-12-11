@@ -21,5 +21,5 @@ data class Usuario(
     var roles: String? = null, // e.j., "ROLE_USER,ROLE_ADMIN"
 
     @OneToMany(mappedBy = "usuario" ,cascade = [(CascadeType.ALL)], orphanRemoval = true)
-    var rutas: List<Ruta> = mutableListOf(),
+    var rutas: MutableList<Ruta> = mutableListOf(),
 )

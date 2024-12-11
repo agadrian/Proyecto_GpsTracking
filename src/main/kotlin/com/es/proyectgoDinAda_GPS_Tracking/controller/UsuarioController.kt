@@ -1,6 +1,7 @@
 package com.es.proyectgoDinAda_GPS_Tracking.controller
 
 import com.es.proyectgoDinAda_GPS_Tracking.exceptions.BadRequestException
+import com.es.proyectgoDinAda_GPS_Tracking.exceptions.ForbiddenException
 import com.es.proyectgoDinAda_GPS_Tracking.model.Usuario
 import com.es.proyectgoDinAda_GPS_Tracking.security.TokenService
 import com.es.proyectgoDinAda_GPS_Tracking.service.UsuarioService
@@ -67,9 +68,7 @@ class UsuarioController {
         var token = ""
         token = tokenService.generateToken(authentication)
 
-
         return ResponseEntity(mapOf("token" to token), HttpStatus.CREATED)
-
     }
 
 
@@ -81,8 +80,82 @@ class UsuarioController {
 
 
     @GetMapping("/")
-    fun getAllUsers(): ResponseEntity<List<Usuario>> {
+    fun getAllUsers(
+        authentication: Authentication
+    ): ResponseEntity<List<Usuario>> {
+
         val users = usuarioService.getAllUsers()
+
         return ResponseEntity(users, HttpStatus.OK)
     }
+
+
+    @GetMapping("/{id}")
+    fun getUserByid(
+        @PathVariable id: String,
+        authentication: Authentication
+    ): ResponseEntity<Usuario> {
+
+        checkId(id)
+
+        val user = usuarioService.getById(id)
+
+        checkIfSelfOrAdmin(user, authentication)
+
+        return ResponseEntity(user.copy(password = null), HttpStatus.OK)
+    }
+
+
+    @PutMapping("/{id}")
+    fun updateUserById(
+        @PathVariable id: String,
+        @RequestBody newUser: Usuario,
+        authentication: Authentication
+    ): ResponseEntity<Usuario> {
+
+        checkId(id)
+
+        val user = usuarioService.getById(id)
+        checkIfSelfOrAdmin(user, authentication)
+
+        return ResponseEntity(usuarioService.updateById(id, newUser), HttpStatus.OK)
+    }
+
+
+    @DeleteMapping("/{id}")
+    fun deleteById(
+        @PathVariable id: String,
+        authentication: Authentication
+    ){
+        checkId(id)
+
+        val user = usuarioService.getById(id)
+
+        checkIfSelfOrAdmin(user, authentication)
+
+        usuarioService.deleteById(id)
+
+    }
+
+
+    /**
+     * Realizar comprobaciones basicas sobre la ID, para no repetir codigo
+     */
+    fun checkId(id: String) {
+        if (id.isBlank()) throw BadRequestException("La ID no puede estar vacía")
+
+        if (id.toLongOrNull() == null) throw BadRequestException("El ID debe ser un número válido")
+
+        if (id.toLong() <= 0) throw BadRequestException("La ID introducida no es válida")
+    }
+
+    fun checkIfSelfOrAdmin(user: Usuario, authentication: Authentication){
+
+        val roles = authentication.authorities.map { it.authority }
+
+        if (authentication.name != user.username && !roles.contains("ROLE_ADMIN")) throw ForbiddenException("No tienes acceso a este recurso")
+    }
+
+
+
 }

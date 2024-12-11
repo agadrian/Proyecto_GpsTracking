@@ -43,7 +43,10 @@ class SecurityConfig {
                     .requestMatchers(HttpMethod.POST,"/usuarios/register").permitAll()
                     .requestMatchers(HttpMethod.POST,"/usuarios/login").permitAll() // Permitir hacer el login a todos
                     .requestMatchers(HttpMethod.GET,"/usuarios/").hasRole("ADMIN") // Get all users
-                    //.requestMatchers(HttpMethod.GET,"/usuarios/").authenticated()
+                    .requestMatchers(HttpMethod.GET,"/usuarios/{id}").authenticated() // Get user by id
+                    .requestMatchers(HttpMethod.PUT,"/usuarios/{id}").authenticated() // update user by id
+                    .requestMatchers(HttpMethod.DELETE,"/usuarios/{id}").authenticated() // delete user by id
+
 
                     //.requestMatchers("/secretos/ficha1").hasAuthority("ADMIN") // El hasrole por defecto tiene que estar autenticated
                     //.requestMatchers(HttpMethod.DELETE, "/rutas_protegidas/eliminar/{nombre}").authenticated()
@@ -56,9 +59,6 @@ class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .httpBasic(Customizer.withDefaults())
-            .exceptionHandling { exceptions ->
-                .authenticationM
-            }
             .build()
     }
 

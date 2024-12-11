@@ -1,20 +1,18 @@
 
+## Nombre del proyecto: Drive Tracker / Route Recorder
 
-1. **Nombre del proyecto: Drives Tracker**
-2. Idea del proyecto
+## Idea del proyecto
 
 Este proyecto consiste en la creación de una **API REST** segura, desarrollada con **Spring Boot** y usando **Spring Security**.
-La idea principal es una App que permite almacenar y registrar el seguimiento en tiempo real de un vehículo usando el GPS de un dispositivo móvil.
+La idea principal es una App que permite almacenar y registrar el seguimiento GPS de un vehículo usando la ubiacion en timepo real de un dispositivo móvil.
 
-3. Justificación del proyecto
-Este proyecto nace para cubirar la necesidad de poder tener una App que resgistre tus salidas, rutas, viajes en vehiculos para poder consultarlas y compartirlas en cualquier momento. Nace con la idea principal de no tener la preocupación de no saber como encontrar o localizar de nuevo algún lugar o carretera por el cual has conducido.
+## Justificación del proyecto
+Esta App nace para cubirar la necesidad de poder resgistrar tus salidas, rutas o viajes en vehículo, permitiendo consultarlas y compartirlas en cualquier momento. La idea principal es no tener la preocupación de no saber como encontrar o localizar de nuevo algún lugar o carretera por la cual has conducido, además de obtener un análisis de cada una de ellas, un análisis general, etc.
 Pensada principalmente para el público motero, que sale a hacer rutas a la aventura sin un destino concreto y quieren tener un registro de esta.
 
-4. Descripciónn de las tablas 
+# Descripciónn de las tablas
 
-
-
-# Endpoints
+## Endpoints
 ### Tabla usuarios
 | Método | Endpoint           | Descripción                |
 |--------|--------------------|----------------------------|
@@ -40,7 +38,7 @@ Pensada principalmente para el público motero, que sale a hacer rutas a la aven
 | GET    | /rutas/{id}/puntos | Obtiene todos los puntos GPS de una ruta |
 | POST   | /rutas/{id}/puntos | Añade una lista de puntos GPS a una ruta |
 
-# Explicación Endpoints
+## Explicación Endpoints
 ### Tabla usuarios
 - POST /usuarios -> Resgistra un nuevo usuario proporcionando un correo, contraseña y nombre de usuario. Responde con error si el usuario ya existe.
 - GET /usuarios -> Obtiene un listado de la información de todos los usuarios.

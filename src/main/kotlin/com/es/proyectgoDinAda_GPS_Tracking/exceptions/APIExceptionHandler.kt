@@ -58,7 +58,7 @@ class APIExceptionHandler {
     @ExceptionHandler(UnauthorizedException::class)
     fun handleUnauthorized(request: HttpServletRequest, exception: UnauthorizedException): ResponseEntity<ErrorMessage> {
         val errorMessage = ErrorMessage(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            status = HttpStatus.UNAUTHORIZED.value(),
             message = exception.message ?: "Unauthorized access",
             path = request.requestURI
         )
@@ -69,7 +69,7 @@ class APIExceptionHandler {
     @ExceptionHandler(ForbiddenException::class)
     fun handleForbidden(request: HttpServletRequest, exception: ForbiddenException): ResponseEntity<ErrorMessage> {
         val errorMessage = ErrorMessage(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            status = HttpStatus.FORBIDDEN.value(),
             message = exception.message ?: "Access is forbidden",
             path = request.requestURI
         )
