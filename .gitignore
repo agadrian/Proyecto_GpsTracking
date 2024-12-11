@@ -41,3 +41,4 @@ out/
 .kotlin
 
 *.pem
+src/main/resources/certs
