@@ -4,10 +4,10 @@
 ## Idea del proyecto
 
 Este proyecto consiste en la creación de una **API REST** segura, desarrollada con **Spring Boot** y usando **Spring Security**.
-La idea principal es una App que permite almacenar y registrar el seguimiento GPS de un vehículo usando la ubiacion en timepo real de un dispositivo móvil.
+La idea principal es una App que permite almacenar y registrar el seguimiento GPS de un vehículo usando la ubicación en tiempo real de un dispositivo móvil.
 
 ## Justificación del proyecto
-Esta App nace para cubrir la necesidad de poder resgistrar tus salidas, rutas o viajes en vehículo, permitiendo consultarlas y compartirlas en cualquier momento. La idea principal es no tener la preocupación de encontrar o localizar de nuevo algún lugar o carretera por la cual has conducido, además de obtener un análisis de cada una de las rutas, un análisis general semanal, mensual etc.
+Esta App nace para cubrir la necesidad de poder registrar tus salidas, rutas o viajes en vehículo, permitiendo consultarlas y compartirlas en cualquier momento. La idea principal es no tener la preocupación de encontrar o localizar de nuevo algún lugar o carretera por la cual has conducido, además de obtener un análisis de cada una de las rutas, un análisis general semanal, mensual etc.
 Pensada principalmente para el público motero, que sale a hacer rutas a la aventura sin un destino concreto y quieren tener un registro de esta.
 
 
@@ -83,7 +83,7 @@ data class Ruta(
 )
 ```
 
-Esta tabla contiene la información de cada ruta esencial, como el nombre de la ruta, fechas, distancia. Además, esta relacionada con la tabla Usuarios, alamcenando la id del usuario al que pertenece cada ruta.
+Esta tabla contiene la información de cada ruta esencial, como el nombre de la ruta, fechas, distancia. Además, esta relacionada con la tabla Usuarios, almacenando la id del usuario al que pertenece cada ruta.
 El campo usuario le pongo @JsonIgnore para que a la hora de relizar la petición no se muestre en bucle.
 
 ### Tabla puntos_gps
@@ -116,7 +116,7 @@ data class PuntosGPS(
 )
 ```
 
-Esta tabla contiene la información de cada punto que se obtiene del gps del dispositivo. Esta relacionado con la tabla Rutas, para asignarle la ID de la ruta a la que pertenece cada punto.
+Esta tabla contiene la información de cada punto que se obtiene del GPS del dispositivo. Está relacionada con la tabla Rutas, para asignarle la ID de la ruta a la que pertenece cada punto.
 
 ## Diagrama E-R
 ![Diagrama E-R](src/main/resources/Diagrama_GPSTracking.png)
@@ -127,7 +127,7 @@ Esta tabla contiene la información de cada punto que se obtiene del gps del dis
 |--------|--------------------|----------------------------|
 | POST   | /usuarios/register | Registrar nuevo usuario    |
 | POST   | /usuarios/login    | Hacer login con el usuario |
-| GET    | /usuarios          | Obtener todos los usuarios |
+| GET    | /usuarios/         | Obtener todos los usuarios |
 | GET    | /usuario/{id}      | Obtener usuario por ID     |
 | PUT    | /usuarios/{id}     | Actualizar usuario por ID  |
 | DELETE | /usuarios/{id}     | Eliminar usuario por ID    |
@@ -135,8 +135,8 @@ Esta tabla contiene la información de cada punto que se obtiene del gps del dis
 ### Tabla rutas
 | Método | Endpoint    | Descripción             |
 |--------|-------------|-------------------------|
-| POST   | /rutas      | Registrar nueva ruta    |
-| GET    | /rutas      | Obtener todas las rutas |
+| POST   | /rutas/     | Registrar nueva ruta    |
+| GET    | /rutas/     | Obtener todas las rutas |
 | GET    | /rutas/{id} | Obtener ruta por ID     |
 | PUT    | /rutas/{id} | Actualizar ruta por ID  |
 | DELETE | /rutas/{id} | Eliminar ruta por ID    |
@@ -333,3 +333,78 @@ Se han implementado las siguientes restricciones de seguridad en la **API REST**
 
 
 - **Verificación de rol:** Antes de realizar cualquier operación, se verifica si el usuario es administrador. Si es así, se le otorgan permisos adicionales para realizar acciones como ver, modificar o eliminar recursos de otros usuarios.
+
+
+### Archivo config
+
+Exceptuando el register y el login, todos los endpoints requieren que el usuario este autenticado, y que sea el mismo el que los hace o otro usuario autenticado que tenga el rol de ADMIN. Unicamente el GetAllUsers es accesible para los ADMIN exclusivamente.
+
+**SecurityConfig**
+
+```kotlin
+
+@Bean
+    fun securityFilterChain(
+        http: HttpSecurity,
+        // Le paso los contorladores concretos para las excepciones de este config, ya que mi manejador de excepociones de el resto de la app no es compatible tal y como esta. Las excepciones personalizadas si, pero el manejador no.
+        customAccessDeniedHandler: CustomAccessDeniedHandler,
+    ): SecurityFilterChain {
+
+        return http
+            .csrf { csrf -> csrf.disable() } // Cross-Site Forgery
+            .authorizeHttpRequests { auth ->
+                auth
+                    /* PUBLICOS */
+                    .requestMatchers(HttpMethod.POST,"/usuarios/register").permitAll()
+                    .requestMatchers(HttpMethod.POST,"/usuarios/login").permitAll() // Permitir hacer el login a todos
+
+                    /* PRIVADOS USUARIOS*/
+                    .requestMatchers(HttpMethod.GET,"/usuarios/").hasRole("ADMIN") 
+                    .requestMatchers(HttpMethod.GET,"/usuarios/{id}").authenticated() 
+                    .requestMatchers(HttpMethod.PUT,"/usuarios/{id}").authenticated() 
+                    .requestMatchers(HttpMethod.DELETE,"/usuarios/{id}").authenticated()  
+
+                    /* PRIVADOS RUTAS*/
+                    .requestMatchers(HttpMethod.GET,"/rutas/").authenticated()
+                    .requestMatchers(HttpMethod.GET,"/rutas/{id}").authenticated()
+                    .requestMatchers(HttpMethod.POST,"/rutas/").authenticated()
+                    .requestMatchers(HttpMethod.PUT,"/rutas/{id}").authenticated()
+                    .requestMatchers(HttpMethod.DELETE,"/rutas/{id}").authenticated()
+
+                    /* PRIVADOS PUNTOS GPS */
+                    .requestMatchers(HttpMethod.GET,"/puntos_gps/{rutaId}").authenticated()
+                    .requestMatchers(HttpMethod.POST,"/puntos_gps/{rutaId}").authenticated()
+                    .requestMatchers(HttpMethod.PUT,"/puntos_gps/{puntoId}").authenticated()
+                    .requestMatchers(HttpMethod.DELETE,"/puntos_gps/{puntoId}").authenticated()
+
+                    //.requestMatchers("/secretos/ficha1").hasAuthority("ADMIN") // El hasrole por defecto tiene que estar autenticated
+                    //.requestMatchers(HttpMethod.DELETE, "/rutas_protegidas/eliminar/{nombre}").authenticated()
+
+            }
+
+
+            .exceptionHandling { exceptions ->
+                // Excepciones
+                exceptions
+                    // AccessDeniedHandler para ForbiddenException
+                    .accessDeniedHandler(customAccessDeniedHandler)
+
+                    // AuthenticationEntryPoint para UnauthorizedException
+                //.authenticationEntryPoint(customAuthenticationEntryPoint)
+            }
+
+
+            .oauth2ResourceServer { oauth2 ->
+                oauth2.jwt ( Customizer.withDefaults() ) // Establece que el contrl de autenticacion se hagapor jwt, en vez de una atenticacion basica
+            }
+
+
+
+            .sessionManagement { session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No mantiene estado en la sesion, t_odo el rato depende del token JWT
+            }
+
+            .httpBasic(Customizer.withDefaults())
+            .build()
+    }
+```

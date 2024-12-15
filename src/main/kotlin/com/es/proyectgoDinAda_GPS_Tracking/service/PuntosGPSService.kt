@@ -7,6 +7,7 @@ import com.es.proyectgoDinAda_GPS_Tracking.exceptions.UnauthorizedException
 import com.es.proyectgoDinAda_GPS_Tracking.model.PuntosGPS
 import com.es.proyectgoDinAda_GPS_Tracking.model.Usuario
 import com.es.proyectgoDinAda_GPS_Tracking.repository.PuntosGPSRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
@@ -14,8 +15,13 @@ import org.springframework.stereotype.Service
 @Service
 class PuntosGPSService {
 
+    @Autowired
     private lateinit var usuarioService: UsuarioService
+
+    @Autowired
     private lateinit var puntosGPSRepository: PuntosGPSRepository
+
+    @Autowired
     private lateinit var rutaService: RutaService
 
 
@@ -53,7 +59,6 @@ class PuntosGPSService {
         newPuntoGPS: PuntosGPS,
         authentication: Authentication
     ): PuntosGPS {
-        // TODO
 
         // Verificar acceso permitido
         checkIfSelfOrAdmin(puntoId, authentication)

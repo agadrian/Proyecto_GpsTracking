@@ -31,7 +31,9 @@ class RutaController {
         authentication: Authentication
     ): ResponseEntity<Ruta> {
 
-        // TODO HACER COMPROBACIONES DE VACIOS NULOS ETC
+        if (ruta.nombre.isNullOrBlank()) {
+            throw BadRequestException("El nombre de la ruta no puede estar vacío")
+        }
 
         val nuevaRuta = rutaService.createRoute(ruta, authentication)
         return ResponseEntity(nuevaRuta, HttpStatus.CREATED)

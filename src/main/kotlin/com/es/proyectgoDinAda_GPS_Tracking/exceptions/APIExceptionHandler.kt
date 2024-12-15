@@ -3,6 +3,7 @@ package com.es.proyectgoDinAda_GPS_Tracking.exceptions
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.security.authentication.InsufficientAuthenticationException
@@ -16,7 +17,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 // En lugar de usar @ResponseStatus, devolvemos expplicitamente un ResponseEntity con el codigoa decuado, por ej, HttpStatus.BAD_REQUEST o HttpStatus.NOT_FOUND, y el objeto ErrorMessage que contiene el mensaje de error y la ruta de la solicitud (request.requestURI)
 
 // Hacerlo de esta forma permite que se contorle los errores en APIExceptionHandler, por tanto el flujo de la app no se corta, como ocurre al usar ResponseStatus y no 'pete' la aplicacion.
-// Todo: Pasarle la excepcion concreta o de tipo Exception directamente??¿?¿?
+
 @ControllerAdvice
 class APIExceptionHandler {
 
@@ -84,7 +85,19 @@ class APIExceptionHandler {
     fun handleAuthenticationException(request: HttpServletRequest, exception: Exception): ResponseEntity<ErrorMessage> {
         val errorMessage = ErrorMessage(
             status = HttpStatus.UNAUTHORIZED.value(),
-            message = "Authentication failed, invalid credentials",
+            message = "Login no efectuado, credenciales incorrectas",
+            path = request.requestURI
+        )
+        return ResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED)
+    }
+
+
+    // Manejo de InternalAuthenticationServiceException (401) (login incorrecto)
+    @ExceptionHandler(BadCredentialsException::class)
+    fun handleBadCredentialsException(request: HttpServletRequest, e: Exception): ResponseEntity<ErrorMessage> {
+        val errorMessage = ErrorMessage(
+            status = HttpStatus.UNAUTHORIZED.value(),
+            message = "Login no efectuado, credenciales incorrectas",
             path = request.requestURI
         )
         return ResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED)

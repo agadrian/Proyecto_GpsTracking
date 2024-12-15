@@ -3,6 +3,7 @@ package com.es.proyectgoDinAda_GPS_Tracking.controller
 import com.es.proyectgoDinAda_GPS_Tracking.exceptions.BadRequestException
 import com.es.proyectgoDinAda_GPS_Tracking.model.PuntosGPS
 import com.es.proyectgoDinAda_GPS_Tracking.service.PuntosGPSService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/puntos_gps")
 class PuntosGPSController {
 
+    @Autowired
     private lateinit var puntosGPSService: PuntosGPSService
 
     // Registrar un nuevo punto GPS
@@ -47,7 +49,7 @@ class PuntosGPSController {
     // Actualizar un punto GPS por id
     @PutMapping("/{puntoId}")
     fun updatePuntoGPS(
-        // TODO POR AQUI
+
         @PathVariable puntoId: String,
         @RequestBody updatedPuntoGPS: PuntosGPS,
         authentication: Authentication

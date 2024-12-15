@@ -26,13 +26,11 @@ class RutaService {
         authentication: Authentication
     ): Ruta {
 
-        if (ruta.nombre.isNullOrBlank()) {
-            throw BadRequestException("El nombre de la ruta no puede estar vacío")
-        }
+
 
         // Comprobar que no exista ese nombre ya
         val rutaExistente = rutaRepository.findByNombre(ruta.nombre!!)
-        if (rutaExistente.isPresent) {
+        if (rutaExistente.isPresent && rutaExistente.get().usuario?.username == authentication.name) {
             throw AlreadyExistsException("Ya existe una ruta con el nombre ${ruta.nombre}")
         }
 

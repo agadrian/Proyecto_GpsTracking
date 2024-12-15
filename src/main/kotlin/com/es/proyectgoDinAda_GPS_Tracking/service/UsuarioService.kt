@@ -34,6 +34,7 @@ class UsuarioService: UserDetailsService {
         checkPassword(usuario.password!!)
 
         // Comprobamos que el usuario (y email) no existe en la base de datos
+        // Comprobamos que el usuario (y email) no existe en la base de datos
         usuario.username?.let { usuarioRepository.findByUsername(it).ifPresent {throw AlreadyExistsException("El usuario ${usuario.username} ya existe")} }
 
         usuario.email?.let { usuarioRepository.findByEmail(it).ifPresent {throw AlreadyExistsException("El usuario con email ${usuario.email} ya existe")} }
@@ -91,7 +92,6 @@ class UsuarioService: UserDetailsService {
         validateNewUserData(newUser, usuario)
 
 
-        // TODO: Hacer un check de estas opciones y otro de las nuevas que se ponen, para comprobar que no existan ya en la base de datos, en cuyo caso lanzar excepcion
         usuario.username = newUser.username ?: usuario.username
         usuario.password = passwordEncoder.encode(newUser.password) ?: usuario.password
         usuario.roles = newUser.roles ?: usuario.roles

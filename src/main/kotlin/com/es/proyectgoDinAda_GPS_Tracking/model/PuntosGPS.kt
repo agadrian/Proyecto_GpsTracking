@@ -1,5 +1,7 @@
 package com.es.proyectgoDinAda_GPS_Tracking.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -13,6 +15,7 @@ data class PuntosGPS(
 
     @ManyToOne
     @JoinColumn(name = "ruta_id", nullable = false)
+    @JsonIgnore
     var ruta: Ruta? = null,
 
     @Column(nullable = false, length = 20)

@@ -17,7 +17,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.JwtDecoder
@@ -50,10 +49,10 @@ class SecurityConfig {
                     .requestMatchers(HttpMethod.POST,"/usuarios/login").permitAll() // Permitir hacer el login a todos
 
                     /* PRIVADOS USUARIOS*/
-                    .requestMatchers(HttpMethod.GET,"/usuarios/").hasRole("ADMIN") // Get all users
-                    .requestMatchers(HttpMethod.GET,"/usuarios/{id}").authenticated() // Get user by id
-                    .requestMatchers(HttpMethod.PUT,"/usuarios/{id}").authenticated() // update user by id
-                    .requestMatchers(HttpMethod.DELETE,"/usuarios/{id}").authenticated()  // delete user by id
+                    .requestMatchers(HttpMethod.GET,"/usuarios/").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET,"/usuarios/{id}").authenticated()
+                    .requestMatchers(HttpMethod.PUT,"/usuarios/{id}").authenticated()
+                    .requestMatchers(HttpMethod.DELETE,"/usuarios/{id}").authenticated()
 
                     /* PRIVADOS RUTAS*/
                     .requestMatchers(HttpMethod.GET,"/rutas/").authenticated()
@@ -62,6 +61,11 @@ class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT,"/rutas/{id}").authenticated()
                     .requestMatchers(HttpMethod.DELETE,"/rutas/{id}").authenticated()
 
+                    /* PRIVADOS PUNTOS GPS */
+                    .requestMatchers(HttpMethod.GET,"/puntos_gps/{rutaId}").authenticated()
+                    .requestMatchers(HttpMethod.POST,"/puntos_gps/{rutaId}").authenticated()
+                    .requestMatchers(HttpMethod.PUT,"/puntos_gps/{puntoId}").authenticated()
+                    .requestMatchers(HttpMethod.DELETE,"/puntos_gps/{puntoId}").authenticated()
 
                     //.requestMatchers("/secretos/ficha1").hasAuthority("ADMIN") // El hasrole por defecto tiene que estar autenticated
                     //.requestMatchers(HttpMethod.DELETE, "/rutas_protegidas/eliminar/{nombre}").authenticated()

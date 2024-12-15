@@ -28,7 +28,7 @@ class UsuarioController {
     @Autowired
     private lateinit var tokenService: TokenService
 
-// TODO: Mirar que retorna cada cosa y si hay que cambiarlo o no
+
 
     /**
      * Insertar un usuario
