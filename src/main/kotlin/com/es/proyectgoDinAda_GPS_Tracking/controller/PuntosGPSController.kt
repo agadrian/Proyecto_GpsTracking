@@ -48,7 +48,7 @@ class PuntosGPSController {
     @PutMapping("/{puntoId}")
     fun updatePuntoGPS(
         // TODO POR AQUI
-        @PathVariable puntoId: Long,
+        @PathVariable puntoId: String,
         @RequestBody updatedPuntoGPS: PuntosGPS,
         authentication: Authentication
     ): ResponseEntity<PuntosGPS> {
@@ -62,7 +62,7 @@ class PuntosGPSController {
     // Eliminar un punto GPS por ID
     @DeleteMapping("/{puntoId}")
     fun deletePuntoGPS(
-        @PathVariable puntoId: Long,
+        @PathVariable puntoId: String,
         authentication: Authentication
 
     ) {

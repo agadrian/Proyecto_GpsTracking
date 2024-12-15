@@ -64,7 +64,7 @@ class RutaService {
         val ruta = rutaRepository.findById(id.toLong()).orElseThrow { NotFoundException("Ruta con ID $id no encontrada") }
 
         // Verificar si la ruta pertenece al usuario autenticado
-        if (ruta.usuario?.id != usuario.id) {
+        if (ruta.usuario?.id != usuario.id && !usuario.roles?.contains("ADMIN")!!) {
             throw ForbiddenException("No tienes acceso a esta ruta")
         }
 
@@ -104,19 +104,5 @@ class RutaService {
         rutaRepository.delete(rutaActual)
 
     }
-
-    //TODO
-    private fun validarPropietarioRuta(ruta: Ruta, authentication: Authentication) {
-        val roles = authentication.authorities.map { it.authority }
-        val isSelf =  ruta.usuario?.username == authentication.name
-        val isAdmin = roles.contains("ROLE_ADMIN")
-
-        if (!isSelf && !isAdmin) throw ForbiddenException("No tienes acceso a este recurso")
-    }
-
-
-
-
-
 
 }
