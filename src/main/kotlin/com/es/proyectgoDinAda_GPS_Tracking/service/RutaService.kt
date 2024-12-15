@@ -25,8 +25,7 @@ class RutaService {
         ruta: Ruta,
         authentication: Authentication
     ): Ruta {
-        // Verificar nombre
-        // TODO añadir alguan comprobacion mas a la hora de comprobar
+
         if (ruta.nombre.isNullOrBlank()) {
             throw BadRequestException("El nombre de la ruta no puede estar vacío")
         }
@@ -106,6 +105,7 @@ class RutaService {
 
     }
 
+    //TODO
     private fun validarPropietarioRuta(ruta: Ruta, authentication: Authentication) {
         val roles = authentication.authorities.map { it.authority }
         val isSelf =  ruta.usuario?.username == authentication.name

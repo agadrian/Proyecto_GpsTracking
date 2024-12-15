@@ -22,6 +22,14 @@ data class PuntosGPS(
     var longitud: Double? = null,
 
     @Column(nullable = false, length = 15)
-    var fechaHora: LocalDateTime = LocalDateTime.now()
+    var fechaHora: LocalDateTime = LocalDateTime.now(),
+
+//    @Column(nullable = true)
+//    var altitud: Double? = null,
+//
+//    @Column(nullable = true)
+//    var velocidad: Float? = null
+
+
 
 )
