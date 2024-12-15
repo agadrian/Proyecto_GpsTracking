@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.security.authentication.InsufficientAuthenticationException
+import org.springframework.security.authentication.InternalAuthenticationServiceException
 
 
 // Controller advice permite que el manejo de errores sea centralizado, y no tenga que especificar el manejo en cada controlador
@@ -42,7 +44,7 @@ class APIExceptionHandler {
 
 
 
-
+    // Manejo de AlreadyExists (404)
     @ExceptionHandler(ConflictException::class, AlreadyExistsException::class)
     fun alreadyExists(request: HttpServletRequest, exception: AlreadyExistsException): ResponseEntity<ErrorMessage> {
         val errorMessage = ErrorMessage(
@@ -77,6 +79,17 @@ class APIExceptionHandler {
     }
 
 
+    // Manejo de InternalAuthenticationServiceException (401) (login incorrecto)
+    @ExceptionHandler(InternalAuthenticationServiceException::class)
+    fun handleAuthenticationException(request: HttpServletRequest, exception: Exception): ResponseEntity<ErrorMessage> {
+        val errorMessage = ErrorMessage(
+            status = HttpStatus.UNAUTHORIZED.value(),
+            message = "Authentication failed, invalid credentials",
+            path = request.requestURI
+        )
+        return ResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED)
+    }
+
     // Manejo de cualquier otra excepción no controlada (500)
     @ExceptionHandler(Exception::class)
     fun handleGenericException(request: HttpServletRequest, exception: Exception): ResponseEntity<ErrorMessage> {
@@ -92,42 +105,4 @@ class APIExceptionHandler {
 
 
 
-    /*
-    @ExceptionHandler(ConflictException::class)
-    fun handleConflict(request: HttpServletRequest, exception: ConflictException): ResponseEntity<ErrorMessage> {
-        val errorMessage = ErrorMessage(
-            status = HttpStatus.CONFLICT.value(),
-            message = exception.message ?: "Conflict occurred",
-            path = request.requestURI
-        )
-        return ResponseEntity(errorMessage, HttpStatus.CONFLICT)
-    }
-    */
-
-
-
-    /*
-
-    @ExceptionHandler(BadRequestException::class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    fun handleBadRequest(request: HttpServletRequest, exception: Exception): ErrorMessage {
-        return ErrorMessage(
-            message = exception.message ?: "Bad request",
-            path = request.requestURI
-            )
-    }
-
-    @ExceptionHandler(NotFoundException::class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    fun handleNotFound(request: HttpServletRequest, exception: Exception): ErrorMessage {
-        return ErrorMessage(
-            message = exception.message ?: "Not found",
-            path = request.requestURI
-        )
-    }
-
-
-     */
 }

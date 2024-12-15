@@ -1,6 +1,6 @@
 
-## Nombre del proyecto: 
-#### Drive Tracker / Route Recorder
+## Nombre del proyecto: #### Routes Tracker
+
 
 ## Idea del proyecto
 
@@ -21,7 +21,7 @@ Pensada principalmente para el público motero, que sale a hacer rutas a la aven
 ### Tabla rutas
 ![Tabla rutas](src/main/resources/Tabla_Rutas.png)
 
-### Tabla puntos_GPS
+### Tabla puntos_gps
 ![Tabla puntos_gps](src/main/resources/Tabla_PuntosGPS.png)
 
 # Diagrama E-R
@@ -73,3 +73,10 @@ Pensada principalmente para el público motero, que sale a hacer rutas a la aven
 - GET /rutas/{id}/puntos -> Obtiene todos los puntos asociados a una ruta específica por su ID.
 
 
+## Lógica de Negocio de la API
+
+
+## Excepciones y códigos de estado
+
+
+## Restricciones de seguridad aplicadas

@@ -28,6 +28,7 @@ class UsuarioController {
     @Autowired
     private lateinit var tokenService: TokenService
 
+// TODO: Mirar que retorna cada cosa y si hay que cambiarlo o no
 
     /**
      * Insertar un usuario
@@ -35,14 +36,7 @@ class UsuarioController {
     @PostMapping("/register")
     fun register(
         @RequestBody newUser: Usuario
-    ): ResponseEntity<Usuario?> {
-
-        if (newUser.username.isNullOrBlank()) throw BadRequestException("El nombre de usuario es obligatorio")
-
-        if (newUser.password.isNullOrBlank()) throw BadRequestException("La contraseña es obligatoria")
-
-        if (newUser.email.isNullOrBlank()) throw BadRequestException("El email es obligatorio")
-
+    ): ResponseEntity<Usuario?>{
 
         usuarioService.registerUsuario(newUser)
 
@@ -50,33 +44,32 @@ class UsuarioController {
         return ResponseEntity(newUser.copy(password = null), HttpStatus.CREATED)
     }
 
+
     /**
      * Metodo para hacer el login
      */
     @PostMapping("/login")
-    fun login(@RequestBody usuario: Usuario): ResponseEntity<Any>? {
+    fun login(@RequestBody usuario: Usuario): ResponseEntity<Any> {
+
         val authentication: Authentication
         try {
+            /* UsernamePasswordAuthenticationToken delega la accion de autenticar al usuario a un AuthenticationProvider (DaoAuthenticacionProvider por defecto) el cual para cargar los detalles del usuario usa la funcion que tenemos enm el service de loadByUsername que es la implementacion de UserDatailsService. Por tanto, al usar el UsernamePasswordAuthenticationToken, se encarga de to_do lo explicado previamente, y por ultimo, automaticamente comprueba e intenta validar la contraseña que obtiene cifrada de la base de datos medainte el passwordEncoder, para encondear esta contraseña que se le pasa, y la compara para ver si ahce match con la que obtiene de la base de datos. Si no coincioden, se lanza una excepcion que estamos recogiendo en el catch.*/
             authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken(usuario.username, usuario.password))
         }catch (e: AuthenticationException) {
+
             return ResponseEntity(mapOf("mensaje" to "Credenciales incorrectas!"),HttpStatus.UNAUTHORIZED)
         }
 
-        // Si pasamos la autenticacion, significa que ya estamos bien autenticados.
-        // Pasamos a generar el token
 
-        var token = ""
-        token = tokenService.generateToken(authentication)
+        // Si los datos introducidos son validados y correctos, significa que ya estamos bien autenticados.
+        // Pasamos a generar el token usando esta autenticacion
 
+        val token = tokenService.generateToken(authentication)
+
+        // Devolvemos el token al cliente
         return ResponseEntity(mapOf("token" to token), HttpStatus.CREATED)
     }
 
-
-    // Saludar user
-    @GetMapping("/usuario_autenticado")
-    fun saludarUserAutenticado(authentication: Authentication): String {
-        return "Hola ${authentication.name}"
-    }
 
 
     @GetMapping("/")
@@ -98,9 +91,7 @@ class UsuarioController {
 
         checkId(id)
 
-        val user = usuarioService.getById(id)
-
-        checkIfSelfOrAdmin(user, authentication)
+        val user = usuarioService.getById(id, authentication)
 
         return ResponseEntity(user.copy(password = null), HttpStatus.OK)
     }
@@ -115,10 +106,9 @@ class UsuarioController {
 
         checkId(id)
 
-        val user = usuarioService.getById(id)
-        checkIfSelfOrAdmin(user, authentication)
+        val userUpdated = usuarioService.updateById(id, newUser, authentication)
 
-        return ResponseEntity(usuarioService.updateById(id, newUser), HttpStatus.OK)
+        return ResponseEntity(userUpdated, HttpStatus.OK)
     }
 
 
@@ -129,11 +119,7 @@ class UsuarioController {
     ){
         checkId(id)
 
-        val user = usuarioService.getById(id)
-
-        checkIfSelfOrAdmin(user, authentication)
-
-        usuarioService.deleteById(id)
+        usuarioService.deleteById(id, authentication)
 
     }
 
@@ -149,12 +135,7 @@ class UsuarioController {
         if (id.toLong() <= 0) throw BadRequestException("La ID introducida no es válida")
     }
 
-    fun checkIfSelfOrAdmin(user: Usuario, authentication: Authentication){
 
-        val roles = authentication.authorities.map { it.authority }
-
-        if (authentication.name != user.username && !roles.contains("ROLE_ADMIN")) throw ForbiddenException("No tienes acceso a este recurso")
-    }
 
 
 

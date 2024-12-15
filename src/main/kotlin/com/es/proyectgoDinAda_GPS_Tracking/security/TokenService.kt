@@ -17,6 +17,9 @@ class TokenService {
     @Autowired
     private lateinit var jwtEncoder: JwtEncoder
 
+    /**
+     * Usamos el autentication que obtenemos de hacer un login correcto para generar el token
+     */
     fun generateToken(authentication: Authentication): String {
 
         val roles: String = authentication
@@ -26,11 +29,12 @@ class TokenService {
         val payload: JwtClaimsSet = JwtClaimsSet.builder()
             .issuer("self")
             .issuedAt(Instant.now())
-            .expiresAt(Date().toInstant().plus(Duration.of(1, ChronoUnit.HOURS)))
+            .expiresAt(Date().toInstant().plus(Duration.of(1, ChronoUnit.HOURS))) // Expira en 1 hora
             .subject(authentication.name)
             .claim("roles", roles)
             .build()
 
+        // Usa el jwtEncoder que esta configurado con la clave RSA privada para firmar el token
         return jwtEncoder.encode(JwtEncoderParameters.from(payload)).tokenValue
     }
 

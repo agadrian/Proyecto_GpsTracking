@@ -23,7 +23,7 @@ class ConflictException(message: String) : RuntimeException("$DESCRIPTION $messa
 
 class AlreadyExistsException(message: String) : RuntimeException("$DESCRIPTION $message"){
     companion object {
-        const val DESCRIPTION = "Conflict Exception (409). Entity Already Exists."
+        const val DESCRIPTION = "Conflict Exception (409)."
     }
 }
 
@@ -33,11 +33,14 @@ class UnauthorizedException(message: String) : RuntimeException("$DESCRIPTION $m
     }
 }
 
+
 class ForbiddenException(message: String) : RuntimeException("$DESCRIPTION $message"){
     companion object {
         const val DESCRIPTION = "Forbidden Exception (403)."
     }
 }
+
+
 
 /*
 

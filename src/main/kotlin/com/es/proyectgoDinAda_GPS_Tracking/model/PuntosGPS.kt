@@ -22,6 +22,6 @@ data class PuntosGPS(
     var longitud: Double? = null,
 
     @Column(nullable = false, length = 15)
-    var fechaHora: LocalDateTime? = null // Necesario ¿?
+    var fechaHora: LocalDateTime = LocalDateTime.now()
 
 )

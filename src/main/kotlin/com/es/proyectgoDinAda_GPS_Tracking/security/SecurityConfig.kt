@@ -1,5 +1,6 @@
 package com.es.proyectgoDinAda_GPS_Tracking.security
 
+import com.es.proyectgoDinAda_GPS_Tracking.exceptions.scurityConfigCustomExceptions.CustomAccessDeniedHandler
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
@@ -34,30 +35,61 @@ class SecurityConfig {
 
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChain(
+        http: HttpSecurity,
+        // Le paso los contorladores concretos para las excepciones de este config, ya que mi manejador de excepociones de el resto de la app no es compatible tal y como esta. Las excepciones personalizadas si, pero el manejador no.
+        customAccessDeniedHandler: CustomAccessDeniedHandler,
+    ): SecurityFilterChain {
 
         return http
             .csrf { csrf -> csrf.disable() } // Cross-Site Forgery
             .authorizeHttpRequests { auth ->
                 auth
+                    /* PUBLICOS */
                     .requestMatchers(HttpMethod.POST,"/usuarios/register").permitAll()
                     .requestMatchers(HttpMethod.POST,"/usuarios/login").permitAll() // Permitir hacer el login a todos
+
+                    /* PRIVADOS USUARIOS*/
                     .requestMatchers(HttpMethod.GET,"/usuarios/").hasRole("ADMIN") // Get all users
                     .requestMatchers(HttpMethod.GET,"/usuarios/{id}").authenticated() // Get user by id
                     .requestMatchers(HttpMethod.PUT,"/usuarios/{id}").authenticated() // update user by id
-                    .requestMatchers(HttpMethod.DELETE,"/usuarios/{id}").authenticated() // delete user by id
+                    .requestMatchers(HttpMethod.DELETE,"/usuarios/{id}").authenticated()  // delete user by id
+
+                    /* PRIVADOS RUTAS*/
+                    .requestMatchers(HttpMethod.GET,"/rutas/").authenticated()
+                    .requestMatchers(HttpMethod.GET,"/rutas/{id}").authenticated()
+                    .requestMatchers(HttpMethod.POST,"/rutas/").authenticated()
+                    .requestMatchers(HttpMethod.PUT,"/rutas/{id}").authenticated()
+                    .requestMatchers(HttpMethod.DELETE,"/rutas/{id}").authenticated()
 
 
                     //.requestMatchers("/secretos/ficha1").hasAuthority("ADMIN") // El hasrole por defecto tiene que estar autenticated
                     //.requestMatchers(HttpMethod.DELETE, "/rutas_protegidas/eliminar/{nombre}").authenticated()
 
-            } // Recursos protegidos y publicos
+            }
+
+
+            .exceptionHandling { exceptions ->
+                // Excepciones
+                exceptions
+                    // AccessDeniedHandler para ForbiddenException
+                    .accessDeniedHandler(customAccessDeniedHandler)
+
+                    // AuthenticationEntryPoint para UnauthorizedException
+                //.authenticationEntryPoint(customAuthenticationEntryPoint)
+            }
+
+
             .oauth2ResourceServer { oauth2 ->
                 oauth2.jwt ( Customizer.withDefaults() ) // Establece que el contrl de autenticacion se hagapor jwt, en vez de una atenticacion basica
             }
+
+
+
             .sessionManagement { session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No mantiene estado en la sesion, t_odo el rato depende del token JWT
             }
+
             .httpBasic(Customizer.withDefaults())
             .build()
     }

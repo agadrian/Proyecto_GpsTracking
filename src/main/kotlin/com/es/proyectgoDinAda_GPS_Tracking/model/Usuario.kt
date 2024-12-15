@@ -12,7 +12,7 @@ data class Usuario(
     @Column(nullable = false, unique = true, length = 40)
     var email: String? = null,
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 150)
     var password: String? = null,
 
     @Column(nullable = false, length = 40)

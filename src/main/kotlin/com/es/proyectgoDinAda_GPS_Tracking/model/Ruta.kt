@@ -1,5 +1,6 @@
 package com.es.proyectgoDinAda_GPS_Tracking.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -13,6 +14,7 @@ data class Ruta(
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonIgnore
     var usuario: Usuario? = null,
 
     @OneToMany(mappedBy = "ruta", cascade = [(CascadeType.ALL)], orphanRemoval = true)
