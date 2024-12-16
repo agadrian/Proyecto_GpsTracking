@@ -376,9 +376,7 @@ Exceptuando el register y el login, todos los endpoints requieren que el usuario
                     .requestMatchers(HttpMethod.POST,"/puntos_gps/{rutaId}").authenticated()
                     .requestMatchers(HttpMethod.PUT,"/puntos_gps/{puntoId}").authenticated()
                     .requestMatchers(HttpMethod.DELETE,"/puntos_gps/{puntoId}").authenticated()
-
-                    //.requestMatchers("/secretos/ficha1").hasAuthority("ADMIN") // El hasrole por defecto tiene que estar autenticated
-                    //.requestMatchers(HttpMethod.DELETE, "/rutas_protegidas/eliminar/{nombre}").authenticated()
+                
 
             }
 
